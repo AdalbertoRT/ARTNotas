@@ -1,25 +1,34 @@
 import React from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
-import {Text, Pressable, Alert} from 'react-native';
+import {Text, Pressable, View} from 'react-native';
 import {
   Modal,
   ModalContent,
   ModalContainer,
   ModalHead,
   ModalBody,
+  ButtonsComponent,
   ButtonEdit,
   ButtonDelete,
+  ButtonEmphasis,
+  ButtonToFile,
   IconEdit,
   IconDelete,
 } from './styles';
 
-const ModalScreen = ({visible, modal, modalDelete, item}) => {
-  const list = useSelector((state) => state.notes.list);
+const ModalScreen = ({visible, modal, modalDelete, item, reload}) => {
+  const list = useSelector(state => state.notes.list);
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  const handleEditar = (item) => {
+  const [emphasis, setEmphasis] = React.useState(false);
+
+  React.useLayoutEffect(() => {
+    if (list[item].emphasis) setEmphasis(true);
+  }, []);
+
+  const handleEditar = item => {
     if (list[item]) {
       navigation.navigate('Edit', {
         title: 'Editar Nota',
@@ -35,9 +44,31 @@ const ModalScreen = ({visible, modal, modalDelete, item}) => {
     }
   };
 
-  const handleDelete = (item) => {
+  const handleDelete = item => {
     modal();
     modalDelete();
+  };
+
+  const handleEmphasis = item => {
+    setEmphasis(!emphasis);
+    if (emphasis === false) {
+      dispatch({
+        type: 'EMPHASIS_NOTE',
+        payload: {
+          key: item,
+        },
+      });
+    }
+    if (emphasis === true) {
+      dispatch({
+        type: 'NOT_EMPHASIS_NOTE',
+        payload: {
+          key: item,
+        },
+      });
+    }
+
+    reload();
   };
 
   return (
@@ -53,27 +84,62 @@ const ModalScreen = ({visible, modal, modalDelete, item}) => {
             </Pressable>
           </ModalHead>
           <ModalBody>
-            <ButtonEdit
-              underlayColor="transparent"
-              onPress={() => handleEditar(item)}>
-              <>
-                <IconEdit source={require('../../assets/edit.png')} />
-                <Text
-                  style={{fontWeight: 'bold', fontSize: 20, color: 'green'}}>
-                  Editar
-                </Text>
-              </>
-            </ButtonEdit>
-            <ButtonDelete
-              underlayColor="transparent"
-              onPress={() => handleDelete(item)}>
-              <>
-                <IconDelete source={require('../../assets/delete.png')} />
-                <Text style={{fontWeight: 'bold', fontSize: 20, color: 'red'}}>
-                  Excluir
-                </Text>
-              </>
-            </ButtonDelete>
+            <ButtonsComponent>
+              <ButtonEdit
+                underlayColor="transparent"
+                onPress={() => handleEditar(item)}>
+                <>
+                  <IconEdit source={require('../../assets/edit.png')} />
+                  <Text
+                    style={{fontWeight: 'bold', fontSize: 20, color: 'green'}}>
+                    Editar
+                  </Text>
+                </>
+              </ButtonEdit>
+              <ButtonDelete
+                underlayColor="transparent"
+                onPress={() => handleDelete(item)}>
+                <>
+                  <IconDelete source={require('../../assets/delete.png')} />
+                  <Text
+                    style={{fontWeight: 'bold', fontSize: 20, color: 'red'}}>
+                    Excluir
+                  </Text>
+                </>
+              </ButtonDelete>
+            </ButtonsComponent>
+            <ButtonsComponent>
+              <ButtonEmphasis
+                underlayColor="transparent"
+                onPress={() => handleEmphasis(list[item])}>
+                <>
+                  <IconDelete
+                    source={
+                      list[item].emphasis
+                        ? require(`../../assets/ordinary_note.png`)
+                        : require(`../../assets/important_note.png`)
+                    }
+                  />
+                  <Text
+                    style={{
+                      fontWeight: 'bold',
+                      fontSize: 20,
+                      color: list[item].emphasis ? '#faa377' : 'purple',
+                    }}>
+                    {list[item].emphasis ? 'Não destacar' : 'Destacar'}
+                  </Text>
+                </>
+              </ButtonEmphasis>
+              <ButtonToFile underlayColor="transparent">
+                <>
+                  <IconDelete source={require('../../assets/secure.png')} />
+                  <Text
+                    style={{fontWeight: 'bold', fontSize: 20, color: 'blue'}}>
+                    Arquivar
+                  </Text>
+                </>
+              </ButtonToFile>
+            </ButtonsComponent>
           </ModalBody>
         </ModalContent>
       </ModalContainer>

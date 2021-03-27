@@ -1,6 +1,7 @@
 /* Nas telas (ex: página Home) conectamos as informações dos reducers passadas pelo Provider do redux */
 
 import React from 'react';
+import {Text} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useSelector} from 'react-redux';
 import {
@@ -23,6 +24,7 @@ export default () => {
   const [modal, setModal] = React.useState(false);
   const [modalDelete, setModalDelete] = React.useState(false);
   const [item, setItem] = React.useState(null);
+  const [reload, setReload] = React.useState(false);
 
   React.useEffect(() => {
     navigation.setOptions({
@@ -46,6 +48,12 @@ export default () => {
     <Note data={item} index={index} modal={() => showModal(index)} />
   );
 
+  const reloadList = () => {
+    setReload(!reload);
+    setModal(!modal);
+    console.log(reload);
+  };
+
   return (
     <Container>
       {list.length > 0 ? (
@@ -53,7 +61,8 @@ export default () => {
           style={{flex: 1, width: '100%'}}
           data={list}
           renderItem={listItem}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={item => item.id}
+          extraData={reload}
         />
       ) : (
         <NoNotes>
@@ -67,6 +76,7 @@ export default () => {
           modal={() => setModal(!modal)}
           modalDelete={() => setModalDelete(!modalDelete)}
           item={item}
+          reload={reloadList}
         />
       )}
       {modalDelete && (

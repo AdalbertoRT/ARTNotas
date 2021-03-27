@@ -30,9 +30,15 @@ export const ModalHead = styled.View`
 `;
 
 export const ModalBody = styled.View`
+  flex-direction: column;
+  padding: 10px;
+`;
+
+export const ButtonsComponent = styled.View`
+  margin: 10px;
   flex-direction: row;
   justify-content: space-around;
-  padding: 10px;
+  align-items: center;
 `;
 
 export const ButtonEdit = styled.TouchableHighlight`
@@ -40,6 +46,14 @@ export const ButtonEdit = styled.TouchableHighlight`
 `;
 
 export const ButtonDelete = styled.TouchableHighlight`
+  align-items: center;
+`;
+
+export const ButtonEmphasis = styled.TouchableHighlight`
+  align-items: center;
+`;
+
+export const ButtonToFile = styled.TouchableHighlight`
   align-items: center;
 `;
 

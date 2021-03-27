@@ -4,10 +4,20 @@ import {StyleSheet} from 'react-native';
 export const Title = styled.Text`
   font-weight: bold;
   font-size: 20px;
+  padding-horizontal: 10px;
+  padding-vertical: 10px;
+`;
+
+export const TitleContainer = styled.View`
+  flex-direction: row;
+  align-items: center;
   border-left-width: ${props => props.border || 0};
   border-left-color: red;
-  padding-horizontal: 10px;
-  padding-vertical: 5px;
+`;
+
+export const Tag = styled.Image`
+  width: 35px;
+  height: 35px;
 `;
 
 export const OptionsButton = styled.TouchableHighlight`
@@ -28,14 +38,16 @@ export const styles = StyleSheet.create({
     backgroundColor: '#fefede',
     borderTopLeftRadius: 15,
   },
-  collapseHeader: {
+  collapseHeader: ({emphasis}) => ({
     borderBottomColor: '#333',
+    backgroundColor: emphasis ? '#bd7fff' : 'transparent',
+    borderTopLeftRadius: 15,
     borderBottomWidth: 2,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingLeft: 20,
-  },
+  }),
   collapseHeaderTitle: {},
   collapseBody: {
     paddingLeft: 20,

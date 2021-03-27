@@ -1,6 +1,13 @@
 import React from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-import {Title, OptionsButton, OptionsIcon, styles} from './styles';
+import {
+  Title,
+  TitleContainer,
+  Tag,
+  OptionsButton,
+  OptionsIcon,
+  styles,
+} from './styles';
 import {
   Collapse,
   CollapseHeader,
@@ -13,10 +20,16 @@ export const Note = ({data, index, modal}) => {
     <Collapse
       style={styles.collapse}
       onToggle={() => setShowOptions(!showOptions)}>
-      <CollapseHeader style={styles.collapseHeader}>
-        <View>
-          <Title border={showOptions === true ? 2 : 0}>{data.title}</Title>
-        </View>
+      <CollapseHeader
+        style={styles.collapseHeader(
+          data.emphasis ? {emphasis: true} : {emphasis: false},
+        )}>
+        <TitleContainer border={showOptions === true ? 2 : 0}>
+          {data.emphasis && (
+            <Tag source={require('../../assets/emphasis.png')} />
+          )}
+          <Title>{data.title}</Title>
+        </TitleContainer>
         {showOptions && (
           <OptionsButton underlayColor="transparent" onPress={modal}>
             <OptionsIcon source={require('../../assets/option.png')} />
